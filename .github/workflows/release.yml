@@ -128,8 +128,11 @@ jobs:
 
       - name: Build V2Ray
         run: |
+          sudo apt-get update
+          sudo apt-get install upx -y
           mkdir -p build_assets
           go build -v -o build_assets/v2ray -trimpath -ldflags "-s -w -buildid=" ./main
+          upx -9 build_assets/v2ray
 
       - name: Rename Windows V2Ray
         if: matrix.goos == 'windows'
