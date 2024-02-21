@@ -126,16 +126,14 @@ jobs:
       - name: Get project dependencies
         run: go mod download
 
-      - name: Install upx
-        run: |
-          sudo apt-get update
-          sudo apt-get install upx -y
-
       - name: Build V2Ray
         run: |
           mkdir -p build_assets
           go build -v -o build_assets/v2ray -trimpath -ldflags "-s -w -buildid=" ./main
-          upx -9 build_assets/v2ray
+
+      - name: Shrink V2Ray
+        if: ${{ matrix.goarch == 'mips' || matrix.goarch == 'mipsle' }}
+        run: upx -9 build_assets/v2ray
 
       - name: Rename Windows V2Ray
         if: matrix.goos == 'windows'
